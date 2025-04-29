@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
+from services.classifier import ApplicationClassifier
 from sqlalchemy.orm import Session
 from typing import List
 from . import models, schemas, database
@@ -37,3 +38,26 @@ def update_application(application_id: int, application: models.ApplicationUpdat
     db.commit()
     db.refresh(db_application)
     return db_application 
+
+@app.post("/applications/classify")
+def classify_applications(db: Session = Depends(get_db), force_reclassify: bool = False):
+    classifier = ApplicationClassifier(db)
+
+    input_applications = classifier.read_applications_from_excel("input.xlsx")
+
+    if force_reclassify:
+        apps_to_classify = input_applications
+    else:
+        classifier.create_missing_applications_in_db(input_applications)
+        apps_to_classify = classifier.get_unclassified_applications()
+
+    classifications = {}
+    for app in apps_to_classify:
+        app_classification = classifier.classify_application(app.id, app.name)
+        classifications[app_classification.app_id] = app_classification
+
+    classifier.export_classifications("input.xlsx", "output.xlsx", classifications, input_applications)
+
+    classifier.update_applications_in_db(classifications)
+
+    return {"message": "Applications classified successfully"}
