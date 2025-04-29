@@ -4,10 +4,19 @@ from sqlalchemy.orm import Session
 from typing import List
 from . import models, schemas, database
 from .database import engine, get_db, Base
+from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Application Classification API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/applications", response_model=List[models.Application])
 def list_applications(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
@@ -37,7 +46,7 @@ def update_application(application_id: int, application: models.ApplicationUpdat
     
     db.commit()
     db.refresh(db_application)
-    return db_application 
+    return db_application
 
 @app.post("/applications/classify")
 def classify_applications(db: Session = Depends(get_db), force_reclassify: bool = False):

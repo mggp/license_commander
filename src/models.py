@@ -13,8 +13,7 @@ class ApplicationType(str, Enum):
 class Application(BaseModel):
     id: int
     name: str
-    version: str
-    type: ApplicationType
+    type: ApplicationType | None = None
 
 class ApplicationUpdate(BaseModel):
     type: ApplicationType
