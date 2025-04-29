@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from enum import Enum
 
 class ApplicationType(str, Enum):
@@ -24,4 +24,11 @@ class CategorySummary(BaseModel):
     comunicacion: int
     desarrollo: int
     finanzas: int
-    marketing: int 
+    marketing: int
+
+class PaginatedResponse(BaseModel):
+    items: List[Application]
+    total: int
+    page: int
+    size: int
+    pages: int 

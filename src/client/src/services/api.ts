@@ -6,8 +6,16 @@ export interface Application {
   type: string;
 }
 
-export const getApplications = async (): Promise<Application[]> => {
-  const response = await fetch(`${API_BASE_URL}/applications`);
+export interface PaginatedResponse {
+  items: Application[];
+  total: number;
+  page: number;
+  size: number;
+  pages: number;
+}
+
+export const getApplications = async (page: number = 1, size: number = 10): Promise<PaginatedResponse> => {
+  const response = await fetch(`${API_BASE_URL}/applications?page=${page}&size=${size}`);
   if (!response.ok) {
     throw new Error('Error al obtener las aplicaciones');
   }
