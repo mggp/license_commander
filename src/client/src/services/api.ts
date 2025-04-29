@@ -20,4 +20,12 @@ export const getApplications = async (page: number = 1, size: number = 10): Prom
     throw new Error('Error al obtener las aplicaciones');
   }
   return response.json();
+};
+
+export const getApplicationsByType = async (type: string, page: number = 1, size: number = 10): Promise<PaginatedResponse> => {
+  const response = await fetch(`${API_BASE_URL}/applications/type/${type}?page=${page}&size=${size}`);
+  if (!response.ok) {
+    throw new Error('Error al obtener las aplicaciones por tipo');
+  }
+  return response.json();
 }; 

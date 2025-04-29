@@ -34,6 +34,26 @@ def list_applications(page: int = 1, size: int = 10, db: Session = Depends(get_d
         "pages": pages
     }
 
+@app.get("/applications/type/{type}", response_model=models.PaginatedResponse)
+def list_applications_by_type(
+    type: models.ApplicationType,
+    page: int = 1,
+    size: int = 10,
+    db: Session = Depends(get_db)
+):
+    skip = (page - 1) * size
+    total = db.query(schemas.ApplicationDB).filter(schemas.ApplicationDB.type == type).count()
+    applications = db.query(schemas.ApplicationDB).filter(schemas.ApplicationDB.type == type).offset(skip).limit(size).all()
+    pages = ceil(total / size)
+    
+    return {
+        "items": applications,
+        "total": total,
+        "page": page,
+        "size": size,
+        "pages": pages
+    }
+
 @app.get("/applications/summary", response_model=models.CategorySummary)
 def get_summary(db: Session = Depends(get_db)):
     summary = {
