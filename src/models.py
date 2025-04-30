@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, List
 from enum import Enum
 
@@ -16,7 +16,12 @@ class Application(BaseModel):
     type: ApplicationType | None = None
 
 class ApplicationUpdate(BaseModel):
-    type: ApplicationType
+    name: Optional[str] = None
+    type: Optional[ApplicationType] = None
+
+class PaginationParams(BaseModel):
+    page: int = Field(ge=1, default=1)
+    size: int = Field(ge=1, default=10)
 
 class CategorySummary(BaseModel):
     productividad: int

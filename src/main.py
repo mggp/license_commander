@@ -20,37 +20,36 @@ app.add_middleware(
 )
 
 @app.get("/applications", response_model=models.PaginatedResponse)
-def list_applications(page: int = 1, size: int = 10, db: Session = Depends(get_db)):
-    skip = (page - 1) * size
+def list_applications(params: models.PaginationParams = Depends(), db: Session = Depends(get_db)):
+    skip = (params.page - 1) * params.size
     total = db.query(schemas.ApplicationDB).count()
-    applications = db.query(schemas.ApplicationDB).offset(skip).limit(size).all()
-    pages = ceil(total / size)
+    applications = db.query(schemas.ApplicationDB).offset(skip).limit(params.size).all()
+    pages = ceil(total / params.size)
     
     return {
         "items": applications,
         "total": total,
-        "page": page,
-        "size": size,
+        "page": params.page,
+        "size": params.size,
         "pages": pages
     }
 
 @app.get("/applications/type/{type}", response_model=models.PaginatedResponse)
 def list_applications_by_type(
     type: models.ApplicationType,
-    page: int = 1,
-    size: int = 10,
+    params: models.PaginationParams = Depends(),
     db: Session = Depends(get_db)
 ):
-    skip = (page - 1) * size
+    skip = (params.page - 1) * params.size
     total = db.query(schemas.ApplicationDB).filter(schemas.ApplicationDB.type == type).count()
-    applications = db.query(schemas.ApplicationDB).filter(schemas.ApplicationDB.type == type).offset(skip).limit(size).all()
-    pages = ceil(total / size)
+    applications = db.query(schemas.ApplicationDB).filter(schemas.ApplicationDB.type == type).offset(skip).limit(params.size).all()
+    pages = ceil(total / params.size)
     
     return {
         "items": applications,
         "total": total,
-        "page": page,
-        "size": size,
+        "page": params.page,
+        "size": params.size,
         "pages": pages
     }
 
