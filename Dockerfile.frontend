@@ -1,0 +1,12 @@
+FROM node:22.15-alpine
+
+WORKDIR /app
+
+COPY src/client/package*.json ./
+RUN npm install
+
+COPY src/client .
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"] 
