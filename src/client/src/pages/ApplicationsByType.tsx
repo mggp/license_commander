@@ -47,21 +47,29 @@ export default function ApplicationsByType() {
       <h1 className="text-3xl font-bold text-gray-900 mb-6">
         Aplicaciones de tipo: {type}
       </h1>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {applications.map((app) => (
-          <div key={app.id} className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <h3 className="text-lg font-medium text-gray-900">{app.name}</h3>
-              <p className="mt-1 text-sm text-gray-500">{app.description}</p>
-              <div className="mt-4">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  {app.type}
-                </span>
+      {applications.length === 0 ? (
+        <div className="bg-white shadow rounded-lg p-6 text-center">
+          <p className="text-gray-500 text-lg">
+            No hay aplicaciones registradas de tipo "{type}"
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {applications.map((app) => (
+            <div key={app.id} className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="px-4 py-5 sm:p-6">
+                <h3 className="text-lg font-medium text-gray-900">{app.name}</h3>
+                <p className="mt-1 text-sm text-gray-500">{app.description}</p>
+                <div className="mt-4">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    {app.type}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 } 
