@@ -27,7 +27,7 @@ class ApplicationClassifier:
         self.groq_client = groq.Client(api_key=os.getenv("GROQ_API_KEY"))
         self.db = db
         self.system_prompt = """Eres un experto en clasificación de software empresarial. 
-        Tu tarea es clasificar aplicaciones en una de estas categorías, no debes clasificar aplicaciones en más de una categoría ni en ninguna otra:
+        Tu tarea es clasificar aplicaciones en una de estas categorías, en la más cercana posible:
         - Productividad
         - Diseño
         - Comunicación
@@ -35,7 +35,7 @@ class ApplicationClassifier:
         - Finanzas
         - Marketing
         
-        Responde SÓLO con la categoría y una breve explicación (máximo 150 caracteres) separados por '|'.
+        No debes clasificar aplicaciones en más de una categoría ni mencionar ninguna otra categoría. Responde SÓLO con la categoría y una breve explicación (máximo 150 caracteres) separados por '|'.
         Ejemplo: 'Productividad|Herramienta de procesamiento de texto y hojas de cálculo'"""
 
     def read_applications_from_excel(self, file_path: str) -> pd.DataFrame:
@@ -87,7 +87,9 @@ class ApplicationClassifier:
     def update_applications_in_db(self, classifications: Dict[str, ClassificationResult]) -> None:
         for classification in classifications.values():
             try:
-                app_type = ApplicationType(classification.type.lower())
+                normalized_type = classification.type.lower()
+                normalized_type = normalized_type.replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u').replace('ñ', 'n')
+                app_type = ApplicationType(normalized_type)
             except KeyError:
                 raise ApplicationTypeMissing(classification.type)
 
