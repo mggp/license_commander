@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getApplications, Application, PaginatedResponse } from '../services/api';
+import { formatApplicationType } from '../utils/formatType';
 
 function Home() {
   const [data, setData] = useState<PaginatedResponse | null>(null);
@@ -71,7 +72,7 @@ function Home() {
                     to={`/type/${app.type}`}
                     className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 hover:bg-indigo-200 transition-colors duration-200"
                   >
-                    {app.type}
+                    {formatApplicationType(app.type)}
                   </Link>
                 </td>
               </tr>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getApplicationStats } from '../services/api';
+import { formatApplicationType } from '../utils/formatType';
 
 interface TypeStats {
   type: string;
@@ -57,7 +58,7 @@ export default function ApplicationStats() {
                 to={`/type/${stat.type}`}
                 className="text-lg font-medium text-indigo-600 hover:text-indigo-900"
               >
-                {stat.type}
+                {formatApplicationType(stat.type)}
               </Link>
               <p className="mt-2 text-3xl font-semibold text-gray-900">
                 {stat.count}

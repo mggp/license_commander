@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Application } from '../types/application';
 import { getApplicationsByType } from '../services/api';
+import { formatApplicationType } from '../utils/formatType';
 
 export default function ApplicationsByType() {
   const { type } = useParams();
@@ -45,12 +46,12 @@ export default function ApplicationsByType() {
   return (
     <div>
       <h1 className="text-3xl font-bold text-gray-900 mb-6">
-        Aplicaciones de tipo: {type}
+        Aplicaciones de tipo: {formatApplicationType(type || '')}
       </h1>
       {applications.length === 0 ? (
         <div className="bg-white shadow rounded-lg p-6 text-center">
           <p className="text-gray-500 text-lg">
-            No hay aplicaciones registradas de tipo "{type}"
+            No hay aplicaciones registradas de tipo "{formatApplicationType(type || '')}"
           </p>
         </div>
       ) : (
@@ -62,7 +63,7 @@ export default function ApplicationsByType() {
                 <p className="mt-1 text-sm text-gray-500">{app.description}</p>
                 <div className="mt-4">
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    {app.type}
+                    {formatApplicationType(app.type)}
                   </span>
                 </div>
               </div>
